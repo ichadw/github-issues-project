@@ -2,12 +2,13 @@ import Grid from "@material-ui/core/Grid";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import ListIssues from "../components/lists";
-import { getRepositoryDetails, getIssuesList } from "../helpers/api";
+import { getRepositoryDetails } from "../helpers/api";
 
-export default function Home({ data, issues }) {
+export default function Home({ data }) {
   const dataOwner = data?.owner;
   const ownerName = dataOwner?.login;
   const ownerURL = dataOwner?.html_url;
+  const totalOpenIssues = data.open_issues || 0;
 
   const repoName = data?.name;
   const repoURL = data?.svn_url;
@@ -22,7 +23,7 @@ export default function Home({ data, issues }) {
           {repoName}
         </Link>
       </Breadcrumbs>
-      <ListIssues />
+      <ListIssues totalOpenIssues={totalOpenIssues} />
     </Grid>
   );
 }

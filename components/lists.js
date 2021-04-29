@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
+import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -20,12 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ListIssues({ data }) {
+export default function ListIssues({ totalOpenIssues }) {
   const classes = useStyles();
   const router = useRouter();
   const [stateList, setStateList] = useState([]);
   const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState("");
   const [totalPage, setTotalPage] = useState(0);
 
   useEffect(async () => {
@@ -37,8 +37,6 @@ export default function ListIssues({ data }) {
       setTotalPage(parseInt(issues.total_count / 10));
     }
   }, []);
-
-  // TODO: sorry Not yet implemented, not enough time :(
 
   const handleClickList = (id) => {
     router.push(`/issues/${id}`);
@@ -80,6 +78,15 @@ export default function ListIssues({ data }) {
         }}
         onKeyPress={handleSearch}
       />
+      <List component="nav">
+        <Chip
+          className={classes.chip}
+          label={`${totalOpenIssues} Open`}
+          variant="outlined"
+          color="primary"
+        />
+      </List>
+      <Divider />
       {(stateList || []).map((item, idx) => {
         return (
           <div key={`issues-${idx}`}>

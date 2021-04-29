@@ -7,9 +7,9 @@ export const getRepositoryDetails = () => {
   return get(REPO_URL);
 };
 
-export const getIssueDetail = ({ issueID }) => {
+export const getIssueDetail = ({ issueId }) => {
   // /repos/angular/angular/issues/41870
-  const pathname = REPO_ISSUES_URL.replace("{id}", issueID);
+  const pathname = REPO_ISSUES_URL.replace("{id}", issueId);
   return get(pathname);
 };
 
