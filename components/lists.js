@@ -113,7 +113,7 @@ export default function ListIssues({ totalOpenIssues }) {
       ) : (
         <Typography variant="h6">No Data</Typography>
       )}
-      {stateList.length > 10 ? (
+      {stateList.length <= 10 ? (
         <Pagination
           count={totalPage > 100 ? 100 : totalPage}
           page={page}
