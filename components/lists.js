@@ -13,6 +13,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import InfoIcon from "@material-ui/icons/Info";
 import CloseIcon from "@material-ui/icons/Close";
 import { getIssuesList } from "../helpers/api";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +49,7 @@ export default function ListIssues({ totalOpenIssues }) {
       issues = await getIssuesList({ page: newPage, keyword: `+${keyword}` });
     } finally {
       setStateList(issues.items);
+      setTotalPage(parseInt(issues.total_count / 10));
     }
   };
 
@@ -59,8 +61,9 @@ export default function ListIssues({ totalOpenIssues }) {
   const handleSearch = (e) => {
     const value = e.target.value;
     const enter = e.key === "Enter";
+    const convertValue = value.replace(/\s/, "+");
     if (enter) {
-      handleFetch(1, value);
+      handleFetch(1, convertValue);
     }
   };
 
@@ -70,7 +73,7 @@ export default function ListIssues({ totalOpenIssues }) {
         label="Label"
         style={{ margin: 8 }}
         placeholder="Search..."
-        helperText="example state:open test keyword"
+        helperText="e.g: state:open test keyword"
         fullWidth
         margin="normal"
         InputLabelProps={{
@@ -87,30 +90,36 @@ export default function ListIssues({ totalOpenIssues }) {
         />
       </List>
       <Divider />
-      {(stateList || []).map((item, idx) => {
-        return (
-          <div key={`issues-${idx}`}>
-            <List component="nav">
-              <ListItem button>
-                <ListItemIcon>
-                  {item.state === "open" ? <InfoIcon /> : <CloseIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.title}
-                  secondary={`#${item.number}`}
-                  onClick={() => handleClickList(item.number)}
-                />
-              </ListItem>
-            </List>
-            <Divider />
-          </div>
-        );
-      })}
-      <Pagination
-        count={totalPage > 100 ? 100 : totalPage}
-        page={page}
-        onChange={handleChangePage}
-      />
+      {stateList.length ? (
+        (stateList || []).map((item, idx) => {
+          return (
+            <div key={`issues-${idx}`}>
+              <List component="nav">
+                <ListItem button>
+                  <ListItemIcon>
+                    {item.state === "open" ? <InfoIcon /> : <CloseIcon />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.title}
+                    secondary={`#${item.number}`}
+                    onClick={() => handleClickList(item.number)}
+                  />
+                </ListItem>
+              </List>
+              <Divider />
+            </div>
+          );
+        })
+      ) : (
+        <Typography variant="h6">No Data</Typography>
+      )}
+      {stateList.length > 10 ? (
+        <Pagination
+          count={totalPage > 100 ? 100 : totalPage}
+          page={page}
+          onChange={handleChangePage}
+        />
+      ) : null}
     </div>
   );
 }
